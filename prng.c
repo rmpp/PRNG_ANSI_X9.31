@@ -15,6 +15,7 @@ DT, I, and R are 128-bits each.):
 
 #include "TI_aes_128.h"
 #include "prng.h"
+#include "time.h"
 
 
 //128-bit Seed value
@@ -32,8 +33,36 @@ void generatePRN(unsigned char *prn){
 	
 	//TODO get DT external Seed
 	// DT date/time which is updated on each iteration
-	unsigned char DT[] = {0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70,
-							   0x80, 0x90, 0xa0, 0xb0, 0xc0, 0xd0, 0xe0, 0x00};
+	
+	time_t timer;
+	struct tm y2k = {0};
+	double seconds;
+
+	y2k.tm_hour = 0;   y2k.tm_min = 0; y2k.tm_sec = 0;
+	y2k.tm_year = 100;   y2k.tm_mon = 0; y2k.tm_mday = 1;
+ 
+	time(&timer);  // get current time
+
+	seconds = difftime(timer,mktime(&y2k));
+
+	//printf ("%f ", seconds);
+
+	int aux = (int) seconds;
+	//printf("%d ",aux);
+	
+	char DT[16];
+	memset(DT,'0',16);
+	
+	int i = 0;	
+	while(aux) {
+		DT[i++] = aux % 16 + '0';
+		aux /= 16;
+	}
+	
+	//printf("\n hex \n");
+	//for(e = 0; e < BLOCK_SIZE; e++){
+	//	printf("%02x, ",DT[e] & 0xff);
+	//	}
 	
 	unsigned char I[16];
 	
