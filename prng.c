@@ -98,4 +98,4 @@ void generatePRN(unsigned char *prn){
 	
 	memcpy(prn,state,BLOCK_SIZE);
 	
-	}
+}
