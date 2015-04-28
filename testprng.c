@@ -1,9 +1,12 @@
 #include "prng.h"
 #include "time.h"
+#include <sys/types.h>
+#include <inttypes.h>
+
 
 int main(int argc, const char *argv[])
 {  
-	int e=0;
+	int e = 0;
 	
 	unsigned char sourceKey[] = 
 	{ 
@@ -12,10 +15,28 @@ int main(int argc, const char *argv[])
 	
 	generatePRN(sourceKey);
 	
-	printf("\n PRN \n");
+	/*
+	printf(" PRN \n");
 	for(e = 0; e < BLOCK_SIZE; e++){
 		printf("%02x, ",sourceKey[e] & 0xff);
 		}
-
+	*/
+	
+	//GET A random number just using the first 2 bytes
+	
+	char hexString[256];
+	sprintf(hexString, "%02X", sourceKey[0]);
+	
+	int random;
+	random = strtol(hexString,NULL,16) * 256;
+	
+	sprintf(hexString, "%02X", sourceKey[1]);
+	
+	random = random + strtol(hexString,NULL,16);
+		
+	printf (" %d.\n",random);
+	
 	return 0;
 }
+
+
